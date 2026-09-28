@@ -1,0 +1,155 @@
+# SUP Configuration
+
+registries:
+  npm:
+    endpoint: "https://registry.npmjs.org"
+    tarball_cache: true
+    cache_ttl: 3600
+    rate_limit: 100
+  pypi:
+    endpoint: "https://pypi.org"
+    tarball_cache: true
+    cache_ttl: 3600
+    rate_limit: 100
+  maven:
+    endpoint: "https://repo1.maven.org/maven2"
+    tarball_cache: false
+  go:
+    endpoint: "https://proxy.golang.org"
+    tarball_cache: false
+  cargo:
+    endpoint: "https://crates.io"
+    tarball_cache: true
+  nuget:
+    endpoint: "https://api.nuget.org/v3/index.json"
+
+detectors:
+  typosquatting:
+    enabled: true
+    threshold: 0.85
+    max_distance: 3
+    algorithms: ["levenshtein", "jaro-winkler", "qgram"]
+    keyboard_layouts: ["qwerty", "azerty", "dvorak"]
+    homoglyph_check: true
+  dependency_confusion:
+    enabled: true
+    check_private_scopes: true
+    check_unclaimed_scopes: true
+    internal_registries: []
+  malicious_code:
+    enabled: true
+    entropy_threshold: 7.5
+    min_obfuscation_score: 0.7
+    static_analysis: true
+    dynamic_analysis: false
+    sandbox_timeout: 30
+  ci_cd_poisoning:
+    enabled: true
+    check_unpinned_actions: true
+    check_script_injection: true
+    check_secret_leakage: true
+    check_artifact_tampering: true
+  repo_jacking:
+    enabled: true
+    check_abandoned_packages: true
+    check_namespace_takeover: true
+  build_compromise:
+    enabled: true
+    verify_reproducibility: true
+    check_timestamp_injection: true
+    check_path_manipulation: true
+  container_poisoning:
+    enabled: true
+    check_base_image_drift: true
+    check_malicious_layers: true
+    check_runtime_config: true
+
+analysis:
+  sandbox:
+    enabled: false
+    image: "sup-sandbox:latest"
+    timeout: 60
+    network: false
+    cpu_limit: "1.0"
+    memory_limit: "512m"
+  static:
+    max_file_size: 52428800
+    max_depth: 10
+    follow_symlinks: false
+  dynamic:
+    monitor_syscalls: true
+    monitor_network: true
+    monitor_filesystem: true
+    monitor_process: true
+
+signatures:
+  yara_rules_path: "./signatures"
+  auto_update: true
+  update_interval: 86400
+  custom_rules: []
+
+reporting:
+  formats: ["json", "sarif", "html", "cyclonedx"]
+  output_dir: "./reports"
+  include_evidence: true
+  compress: true
+  retention_days: 30
+
+integrations:
+  github:
+    enabled: true
+    token_env: "GITHUB_TOKEN"
+    api_url: "https://api.github.com"
+  gitlab:
+    enabled: false
+    token_env: "GITLAB_TOKEN"
+    api_url: "https://gitlab.com/api/v4"
+  jenkins:
+    enabled: false
+    url_env: "JENKINS_URL"
+    user_env: "JENKINS_USER"
+    token_env: "JENKINS_TOKEN"
+  slack:
+    enabled: false
+    webhook_env: "SLACK_WEBHOOK"
+  jira:
+    enabled: false
+    url_env: "JIRA_URL"
+    user_env: "JIRA_USER"
+    token_env: "JIRA_TOKEN"
+
+threat_intel:
+  feeds:
+    - name: "sonatype"
+      url: "https://ossindex.sonatype.org/api/v3/component-report"
+      enabled: true
+    - name: "github"
+      url: "https://api.github.com/advisories"
+      enabled: true
+    - name: "osv"
+      url: "https://api.osv.dev/v1/vulns"
+      enabled: true
+    - name: "nvd"
+      url: "https://services.nvd.nist.gov/rest/json/cves/2.0"
+      enabled: true
+    - name: "snyk"
+      url: "https://security.snyk.io/api/v1"
+      enabled: false
+  update_interval: 3600
+  cache_dir: "./cache/threat_intel"
+
+logging:
+  level: "info"
+  format: "json"
+  output: "stdout"
+  file_path: "./logs/sup.log"
+  max_size: 100
+  max_backups: 10
+  max_age: 30
+
+performance:
+  workers: 4
+  batch_size: 100
+  timeout: 300
+  cache_enabled: true
+  cache_dir: "./cache"

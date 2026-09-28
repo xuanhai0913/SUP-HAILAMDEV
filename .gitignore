@@ -1,0 +1,33 @@
+# Go binaries and build output
+/bin/
+/build/
+/dist/
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Tests and coverage
+*.test
+coverage.out
+coverage.html
+
+# SUP runtime output
+/reports/
+/cache/
+/logs/
+
+# Local configuration and secrets
+.env
+.env.*
+!.env.example
+/config/production.yaml
+/config/*.local.yaml
+
+# Local tooling
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
