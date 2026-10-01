@@ -1,4 +1,6 @@
-# Go binaries and build output
+# SUP-HAILAMDEV .gitignore
+
+# Build artifacts
 /bin/
 /build/
 /dist/
@@ -31,3 +33,38 @@ coverage.html
 *.swp
 *.swo
 .DS_Store
+
+# Certificates
+certs/
+*.pem
+*.key
+*.crt
+
+# Temporary
+tmp/
+temp/
+*.tmp
+
+# Dependencies
+vendor/
+
+# Coverage
+coverage.out
+coverage.html
+
+# Profiles
+*.prof
+*.pprof
+
+# Cache
+cache/
+*.cache
+
+# Reports
+reports/
+*.sarif
+*.html
+*.pdf
+
+# Signatures (compiled)
+signatures/*.compiled
